@@ -1,14 +1,12 @@
 package game;
 
-public class Player {
-    public String type ="Player";
+public class Results {
+    public String type ="Results";
     public long id;
     private String name;
     private String place;
     private String animal;
     private String object;
-
-    public Player(){   }
 
     public String getName() {
         return name;
