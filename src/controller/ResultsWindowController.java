@@ -2,9 +2,18 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-public class ResultsWindowController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ResultsWindowController implements Initializable {
+
+    private String ownResults;
+
+    private String opponentResults;
+
     @FXML
     private Label ownNameResult;
 
@@ -36,6 +45,19 @@ public class ResultsWindowController {
 
     @FXML
     void playAgainBtn(ActionEvent event) {
+
+    }
+
+    public void setOwnResults(String ownResults) {
+        this.ownResults = ownResults;
+    }
+
+    public void setOpponentResults(String opponentResults) {
+        this.opponentResults = opponentResults;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
     }
 }
