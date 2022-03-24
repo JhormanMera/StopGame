@@ -1,50 +1,42 @@
 package client;
 
-import controller.LoadingWindowController;
-import javafx.application.Application;
+import controller.StopGameController;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.fxml.Initializable;
 
 import java.io.IOException;
+import java.net.Socket;
+import java.net.URL;
+import java.sql.SQLOutput;
+import java.util.ResourceBundle;
 
-public class Client extends Application {
-    private LoadingWindowController loadController;
-    private Connection connection;
 
-    public static void main(String[] args) {
-        new Client();
-        launch(args);
+public class Client extends Thread {
+    private StopGameController stopGame;
+
+    public Client(){
+        stopGame = new StopGameController();
     }
 
-    public Client() {
-        loadController = new LoadingWindowController();
-        connection = new Connection();
-        connection.start();
-        init();
+    public static void main(String[] args) {
+       new Client().run();
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/ui/LoadingWindow.fxml"));
-        fxmlloader.setController(loadController);
-        try {
-            Parent root = (Parent) fxmlloader.load();
-            Scene scene = new Scene(root);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            primaryStage.setResizable(false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public void run() {
+        new Thread(() -> {
+            //Socket socket = new Socket("127.0.0.1", 6000);
+            //Run on UI Thread
+            System.out.println("GRAN PUTA VIDA");
+            Platform.runLater(()->{
+                try {
+                    stopGame.openLoadWindow();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }).run();
 
-    public void init() {
-        while (true) {
-            //String line = scanner.nextLine();
-            //Envio
-            connection.sendMessage("line");
-        }
     }
 }
