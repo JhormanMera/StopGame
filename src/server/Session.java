@@ -9,8 +9,6 @@ public class Session extends Thread{
     private BufferedReader reader;
     private BufferedWriter writer;
 
-    private OnMessageListener listener;
-
     public Session(Socket socket) {
         this.socket = socket;
 
@@ -22,10 +20,7 @@ public class Session extends Thread{
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             while(true) {
-                /*
-                String line = reader.readLine();
-                System.out.println(line);
-                listener.onMessage(line);*/
+
             }
 
         } catch (IOException ex) {
@@ -33,11 +28,4 @@ public class Session extends Thread{
         }
     }
 
-    public void setListener(OnMessageListener listener) {
-        this.listener = listener;
-    }
-
-    public interface OnMessageListener{
-        void onMessage(String line);
-    }
 }

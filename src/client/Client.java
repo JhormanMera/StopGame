@@ -28,7 +28,7 @@ public class Client extends Thread {
         new Thread(() -> {
             //Socket socket = new Socket("127.0.0.1", 6000);
             //Run on UI Thread
-            System.out.println("GRAN PUTA VIDA");
+            System.out.println("GA");
             Platform.runLater(()->{
                 try {
                     stopGame.openLoadWindow();

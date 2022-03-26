@@ -1,16 +1,20 @@
 package server;
 
+import game.Match;
+import game.StopGame;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Server implements Session.OnMessageListener{
+public class Server {
 
     public static void main(String[] args) throws IOException {
         new Server();
     }
     private ArrayList<Session> sessions;
+    private StopGame stopGame;
 
     public Server() throws IOException {
         sessions = new ArrayList<>();
@@ -21,18 +25,13 @@ public class Server implements Session.OnMessageListener{
             System.out.println("Nuevo cliente conectado!");
             System.out.println("Entró en el puerto: " + socket.getPort());
             Session session = new Session(socket);
-            session.setListener(this);
-            session.start();
             sessions.add(session);
+            if(sessions.size()%2==0){
+                Match match = new Match(sessions.get(sessions.size()-1),sessions.get(sessions.size()-2));
+                sessions.get(sessions.size()-1).start();
+                sessions.get(sessions.size()-2).start();
+                stopGame.addMatch(match);
+            }
         }
     }
-
-    @Override
-    public void onMessage(String line) {
-        if(line.startsWith("ALL::")) {
-
-        }
-    }
-
-
 }
