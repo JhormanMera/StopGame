@@ -17,6 +17,7 @@ public class Server {
     private StopGame stopGame;
 
     public Server() throws IOException {
+        stopGame = new StopGame();
         sessions = new ArrayList<>();
         ServerSocket server = new ServerSocket(6000);
         while (true) {
@@ -28,9 +29,8 @@ public class Server {
             sessions.add(session);
             if(sessions.size()%2==0){
                 Match match = new Match(sessions.get(sessions.size()-1),sessions.get(sessions.size()-2));
-                sessions.get(sessions.size()-1).start();
-                sessions.get(sessions.size()-2).start();
                 stopGame.addMatch(match);
+                match.sendLetter();
             }
         }
     }

@@ -5,38 +5,46 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.sql.SQLOutput;
 import java.util.ResourceBundle;
 
 
-public class Client extends Thread {
-    private StopGameController stopGame;
+public class Client{
+    private static String IP="127.0.0.1";
+    private static int PORT=6000;
+    private static Socket socket;
+    private static BufferedWriter bwriter;
+    private static BufferedReader breader;
+    private StopGameController stopController;
 
     public Client(){
-        stopGame = new StopGameController();
+        stopController = new StopGameController();
+        while(true) {
+            clientConnection();
+        }
     }
 
     public static void main(String[] args) {
-       new Client().run();
+        new Client();
     }
 
-    @Override
-    public void run() {
-        new Thread(() -> {
-            //Socket socket = new Socket("127.0.0.1", 6000);
-            //Run on UI Thread
-            System.out.println("GA");
-            Platform.runLater(()->{
-                try {
-                    stopGame.openLoadWindow();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }).run();
+    private void clientConnection() {
+        try {
+            socket = new Socket(IP,PORT);
+            System.out.println("Conectado");
+            stopController.openLoadWindow();
+            bwriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            breader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String line = breader.readLine();
+            bwriter.write(line+"/n");
+            bwriter.flush();
 
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

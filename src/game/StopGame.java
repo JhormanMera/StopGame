@@ -12,7 +12,7 @@ public class StopGame {
 
     private static StopGame instance;
 
-    private StopGame(){
+    public StopGame(){
         matches = new ArrayList<>();
     }
 
@@ -37,6 +37,7 @@ public class StopGame {
             }
         }
     }
+
 
     public String calculatePoints(String results1, String results2){
         String points="";
