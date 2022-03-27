@@ -1,16 +1,10 @@
 package client;
 
+
 import controller.StopGameController;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URL;
-import java.sql.SQLOutput;
-import java.util.ResourceBundle;
-
 
 public class Client{
     private static String IP="127.0.0.1";
