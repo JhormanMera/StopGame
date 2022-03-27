@@ -19,9 +19,7 @@ public class Session extends Thread{
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            while(true) {
 
-            }
 
         } catch (IOException ex) {
             ex.printStackTrace();
