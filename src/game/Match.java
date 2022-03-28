@@ -1,7 +1,10 @@
 package game;
 
+import com.google.gson.Gson;
+import model.Letter;
 import server.Session;
 
+import java.io.IOException;
 import java.util.Random;
 
 public class Match {
@@ -12,7 +15,7 @@ public class Match {
     private int p1Points;
     private int p2Points;
     private boolean playAgain;
-    private char matchLetter;
+    private String matchLetter;
 
 
 
@@ -21,9 +24,20 @@ public class Match {
         Player2=p2;
         playAgain=false;
     }
+
     public void sendLetter(){
         Random random = new Random();
-        matchLetter = (char) (random.nextInt(26) + 'A');
+        matchLetter = String.valueOf((char) (random.nextInt(26) + 'A'));
+        Letter letter = new Letter(matchLetter);
+        Gson gson = new Gson();
+        String line = gson.toJson(letter);
+        System.out.println("Letra: "+line);
+        try {
+            Player1.sendMessage(line);
+            Player2.sendMessage(line);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
     public Session getPlayer1() {

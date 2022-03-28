@@ -38,6 +38,8 @@ public class ResultsWindowController implements Initializable {
     @FXML
     private Label opponentObjectResult;
 
+    public ResultsWindowController() {  }
+
     @FXML
     void finishBtn(ActionEvent event) {
 

@@ -13,6 +13,8 @@ import java.io.IOException;
 
 public class GameWindowController{
 
+    private ResultsWindowController resultsController;
+
     @FXML
     private Label title;
 
@@ -28,19 +30,27 @@ public class GameWindowController{
     @FXML
     private TextField objectAnswer;
 
+    private Stage stage;
+
+    public GameWindowController(ResultsWindowController r){
+        resultsController = r;
+    }
+
+    public void setTitle(String text){
+        title.setText("Letter: "+text);
+    }
+
     @FXML
     private void stopBtn(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ResultsWindow.fxml"));
-        loader.setController(this);
         try {
             Parent p = (Parent) loader.load();
             Scene scene = new Scene(p);
-            Stage stage = new Stage();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
 }

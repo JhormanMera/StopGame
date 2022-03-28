@@ -2,13 +2,13 @@ package model;
 
 public class Letter {
     public String type="Letter";
-    private char letter;
+    private String letter;
 
-    public char getLetter() {
-        return letter;
+    public Letter(String letter) {
+        this.letter = letter;
     }
 
-    public void setLetter(char letter) {
-        this.letter = letter;
+    public String getLetter() {
+        return letter;
     }
 }

@@ -9,7 +9,6 @@ public class StopGame {
     private final static int REPEATED_ANSWER=50;
     private final static int NON_REPEATED_ANSWER=100;
     private final static int NON_ANSWERED=0;
-
     private static StopGame instance;
 
     private StopGame(){
