@@ -4,6 +4,7 @@ package client;
 import com.google.gson.Gson;
 import controller.GameWindowController;
 import controller.ResultsWindowController;
+import events.OnMessageSended;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -12,13 +13,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Generic;
 import model.Letter;
-import model.Message;
 import model.Result;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
 
-public class Client extends Application {
+public class Client extends Application implements OnMessageSended {
     private static final String IP = "127.0.0.1";
     private static final int PORT = 6000;
     private static Socket socket;
@@ -26,7 +28,7 @@ public class Client extends Application {
     private static BufferedReader reader;
     private final GameWindowController gameController;
     private final ResultsWindowController resultsController;
-    private Letter letter;
+
 
     public static void main(String[] args) {
         new Client();
@@ -36,6 +38,7 @@ public class Client extends Application {
     public Client() {
         resultsController = new ResultsWindowController();
         gameController = new GameWindowController(resultsController);
+        gameController.setSended(this);
     }
 
     @Override
@@ -57,9 +60,10 @@ public class Client extends Application {
                 e.printStackTrace();
             }
 
-            readMessage(primaryStage);
             //PONER AL CLIENTE A ESCUCHAR
             //ABRE SEGUNDA VENTANA
+            readMessage(primaryStage);
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,39 +83,68 @@ public class Client extends Application {
                     e.printStackTrace();
                 }
                 Gson gson = new Gson();
-                Generic generic = gson.fromJson(msg,Generic.class);
+                if(msg.startsWith("{")){
+                    Generic generic = gson.fromJson(msg,Generic.class);
+                            Letter letter = gson.fromJson(msg,Letter.class);
+                            Platform.runLater(()->{
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/GameWindow.fxml"));
+                                try {
+                                    loader.setController(gameController);
+                                    Parent p = loader.load();
+                                    Scene scene = new Scene(p);
+                                    stage.setScene(scene);
+                                    gameController.setTitle(letter.getLetter());
+                                    stage.show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                new Thread(()->{
+                                    readMessage(stage);
+                                }).start();
+                            });
 
-                switch (generic.type){
-                    case "Letter":
-                        letter = gson.fromJson(msg,Letter.class);
-                        Platform.runLater(()->{
-
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/GameWindow.fxml"));
-                            try {
-                                loader.setController(gameController);
-                                Parent p = loader.load();
-                                Scene scene = new Scene(p);
-                                stage.setScene(scene);
-                                gameController.setTitle(letter.getLetter());
-                                stage.show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-                        break;
-                    case "Message":
-                        Message message = gson.fromJson(msg,Message.class);
-                        break;
-                    case "Result":
-                        Result result = gson.fromJson(msg, Result.class);
-                        break;
+                }else if(msg.startsWith("[")){
+                    Result[] result = gson.fromJson(msg, Result[].class);
+                    List<Result> alfa = Arrays.asList(result);
+                    Platform.runLater(()->{
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ResultsWindow.fxml"));
+                        try {
+                            loader.setController(resultsController);
+                            Parent p =loader.load();
+                            Scene scene = new Scene(p);
+                            stage.setScene(scene);
+                            //PONGO LOS RESULTADOS EN LA SIGUIENTE VENTANA
+                            setResultsOnWindow(alfa);
+                            stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
 
                 }
             }).start();
-
     }
 
-    public void sendMessage(String message) throws IOException {
-        writer.write(message+"\n");
+    private void setResultsOnWindow(List<Result> alfa){
+        Result r=alfa.get(0);
+        resultsController.setOwnResults(r.getName(),r.getAnimal(),r.getPlace(),r.getObject());
+        resultsController.setOwnPoints(r.getNamePoints(),r.getAnimalPoints(),r.getPlacePoints(),r.getObjectPoints(),r.getTotalPoints());
+        r=alfa.get(1);
+        resultsController.setOpponentResults(r.getName(),r.getAnimal(),r.getPlace(),r.getObject());
+        resultsController.setOpponentPoints(r.getNamePoints(),r.getAnimalPoints(),r.getPlacePoints(),r.getObjectPoints(),r.getTotalPoints());
+    }
+
+    @Override
+    public void onMessageSended(String sended) {
+        Gson gson = new Gson();
+        String[] msg = sended.split("//");
+        Result r = new Result(msg[0],msg[1], msg[2],msg[3]);
+        String send=gson.toJson(r);
+        try {
+            writer.write(send+"\n");
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

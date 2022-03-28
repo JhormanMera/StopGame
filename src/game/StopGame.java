@@ -31,6 +31,7 @@ public class StopGame {
         match.sendLetter();
     }
 
+    /*
     public void eraseMatch(Match match){
         matches.remove(match);
     }
@@ -44,11 +45,5 @@ public class StopGame {
             }
         }
     }
-
-    public String calculatePoints(String results1, String results2){
-        String points="";
-
-
-        return points;
-    }
+*/
 }

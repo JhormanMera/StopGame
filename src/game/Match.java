@@ -1,6 +1,7 @@
 package game;
 
 import com.google.gson.Gson;
+import events.OnMessageSended;
 import model.Letter;
 import server.Session;
 
@@ -10,82 +11,42 @@ import java.util.Random;
 public class Match {
     private Session Player1;
     private Session Player2;
-    private String p1Answers;
-    private String p2Answers;
-    private int p1Points;
-    private int p2Points;
     private boolean playAgain;
-    private String matchLetter;
-
+    private OnMessageSended sender1;
+    private OnMessageSended sender2;
 
 
     public Match(Session p1, Session p2){
         Player1=p1;
         Player2=p2;
         playAgain=false;
+        sender1=p1;
+        sender2=p2;
+    }
+
+    public String calculatePoints(String results1, String results2){
+        String points="";
+
+        return points;
     }
 
     public void sendLetter(){
         Random random = new Random();
-        matchLetter = String.valueOf((char) (random.nextInt(26) + 'A'));
+        String matchLetter = String.valueOf((char) (random.nextInt(26) + 'A'));
         Letter letter = new Letter(matchLetter);
         Gson gson = new Gson();
         String line = gson.toJson(letter);
         System.out.println("Letra: "+line);
-        try {
-            Player1.sendMessage(line);
-            Player2.sendMessage(line);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sender1.onMessageSended(line);
+        sender2.onMessageSended(line);
 
     }
     public Session getPlayer1() {
         return Player1;
     }
 
-    public void setPlayer1(Session player1) {
-        Player1 = player1;
-    }
-
     public Session getPlayer2() {
         return Player2;
-    }
-
-    public void setPlayer2(Session player2) {
-        Player2 = player2;
-    }
-
-    public String getP1Answers() {
-        return p1Answers;
-    }
-
-    public void setP1Answers(String p1Answers) {
-        this.p1Answers = p1Answers;
-    }
-
-    public String getP2Answers() {
-        return p2Answers;
-    }
-
-    public void setP2Answers(String p2Answers) {
-        this.p2Answers = p2Answers;
-    }
-
-    public int getP1Points() {
-        return p1Points;
-    }
-
-    public void setP1Points(int p1Points) {
-        this.p1Points = p1Points;
-    }
-
-    public int getP2Points() {
-        return p2Points;
-    }
-
-    public void setP2Points(int p2Points) {
-        this.p2Points = p2Points;
     }
 
     public boolean isPlayAgain() {
@@ -95,4 +56,5 @@ public class Match {
     public void setPlayAgain(boolean playAgain) {
         this.playAgain = playAgain;
     }
+
 }
