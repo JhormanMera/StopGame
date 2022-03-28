@@ -1,6 +1,7 @@
 package game;
 
 import com.google.gson.Gson;
+import events.OnMessageReceived;
 import events.OnMessageSended;
 import model.Letter;
 import server.Session;
@@ -14,14 +15,16 @@ public class Match {
     private boolean playAgain;
     private OnMessageSended sender1;
     private OnMessageSended sender2;
+    private OnMessageReceived receiver1;
+    private OnMessageReceived receiver2;
+    private Thread P1Thread;
+    private Thread P2Thread;
 
 
     public Match(Session p1, Session p2){
-        Player1=p1;
-        Player2=p2;
+        Player1=p1;sender1=p1;receiver1=p1;
+        Player2=p2; sender2=p2;receiver2=p2;
         playAgain=false;
-        sender1=p1;
-        sender2=p2;
     }
 
     public String calculatePoints(String results1, String results2){
@@ -39,7 +42,56 @@ public class Match {
         System.out.println("Letra: "+line);
         sender1.onMessageSended(line);
         sender2.onMessageSended(line);
+        readMessage();
+    }
+    public void readMessage(){
+        P1Thread = new Thread() {
+            public void run() {
+                synchronized(this) {
+                    String a = receiver1.onMessageReceived();
 
+                    if(a.contains("Answer")) {
+
+                        P2Thread.interrupt();
+
+                    }
+
+
+                    sender1.onMessageSended(a);
+                    String b = receiver2.onMessageReceived();
+                    sender1.onMessageSended(b);
+
+                }
+            }
+        };
+
+
+        P2Thread = new Thread() {
+
+            public void run() {
+
+                synchronized(this) {
+
+                    String b = receiver2.onMessageReceived();
+
+                    if(b.contains("Answer")) {
+
+                        P1Thread.interrupt();
+
+                    }
+
+                    sender1.onMessageSended(b);
+
+                    String a = receiver1.onMessageReceived();
+
+                    sender2.onMessageSended(a);
+
+                }
+
+            }
+        };
+        P1Thread.start();
+        P2Thread.start();
     }
     public Session getPlayer1() {
         return Player1;

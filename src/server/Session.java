@@ -10,7 +10,6 @@ public class Session extends Thread implements OnMessageSended, OnMessageReceive
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
-    private String message;
 
     public Session(Socket socket) {
         this.socket = socket;
@@ -38,16 +37,15 @@ public class Session extends Thread implements OnMessageSended, OnMessageReceive
     }
 
     @Override
-    public void onMessageReceived(String received) {
-        new Thread(()->{
+    public String onMessageReceived() {
+        String message="";
             try {
                message = reader.readLine();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
+            return message;
     }
 
-    public String getMessage() {return message;}
+
 }

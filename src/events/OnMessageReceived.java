@@ -1,5 +1,5 @@
 package events;
 
 public interface OnMessageReceived {
-    public void onMessageReceived(String received);
+    public String onMessageReceived();
 }
