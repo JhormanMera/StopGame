@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import events.OnMessageReceived;
 import events.OnMessageSended;
 import model.Letter;
+import model.Message;
 import server.Session;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Match {
@@ -49,17 +51,23 @@ public class Match {
             public void run() {
                 synchronized(this) {
                     String a = receiver1.onMessageReceived();
-
-                    if(a.contains("Answer")) {
-
+                    if(a.contains("Result")) {
                         P2Thread.interrupt();
-
                     }
-
-
-                    sender1.onMessageSended(a);
+                    Message msg = new Message ("Answers");
+                    Gson gson = new Gson();
+                    String line = gson.toJson(msg);
+                    sender2.onMessageSended(line);
                     String b = receiver2.onMessageReceived();
-                    sender1.onMessageSended(b);
+                    ArrayList<String> answers = new ArrayList<>();
+                    answers.add(a);
+                    answers.add(b);
+                    String send = gson.toJson(answers);
+                    sender1.onMessageSended(send);
+                    answers.clear();
+                    answers.add(b);
+                    answers.add(a);
+                    sender2.onMessageSended(send);
 
                 }
             }
@@ -72,22 +80,25 @@ public class Match {
 
                 synchronized(this) {
 
-                    String b = receiver2.onMessageReceived();
-
-                    if(b.contains("Answer")) {
-
+                    String a = receiver2.onMessageReceived();
+                    if(a.contains("Result")) {
                         P1Thread.interrupt();
-
                     }
-
-                    sender1.onMessageSended(b);
-
-                    String a = receiver1.onMessageReceived();
-
-                    sender2.onMessageSended(a);
-
+                    Message msg = new Message("Answers");
+                    Gson gson = new Gson();
+                    String line = gson.toJson(msg);
+                    sender1.onMessageSended(line);
+                    String b = receiver1.onMessageReceived();
+                    ArrayList<String> answers = new ArrayList<>();
+                    answers.add(a);
+                    answers.add(b);
+                    String send = gson.toJson(answers);
+                    sender2.onMessageSended(send);
+                    answers.clear();
+                    answers.add(b);
+                    answers.add(a);
+                    sender1.onMessageSended(send);
                 }
-
             }
         };
         P1Thread.start();

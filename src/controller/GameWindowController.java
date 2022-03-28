@@ -40,6 +40,11 @@ public class GameWindowController{
         resultsController = r;
     }
 
+    public void getOwnAnswers(){
+        String msg= nameAnswer.getText().trim()+"//"+animalAnswer.getText().trim()+"//"+locationAnswer.getText().trim()+"//"+objectAnswer.getText().trim();
+        sended.onMessageSended(msg);
+    }
+
     public void setTitle(String text){
         title.setText("Letter: "+text);
     }
@@ -55,8 +60,7 @@ public class GameWindowController{
             alert.setContentText("All fields must be filled before attempting to stop the game");
             alert.showAndWait();
         }else{
-            String msg= nameAnswer.getText().trim()+"//"+animalAnswer.getText().trim()+"//"+locationAnswer.getText().trim()+"//"+objectAnswer.getText().trim();
-            sended.onMessageSended(msg);
+            getOwnAnswers();
         }
 
     }

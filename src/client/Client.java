@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Generic;
 import model.Letter;
+import model.Message;
 import model.Result;
 
 import java.io.*;
@@ -85,23 +86,35 @@ public class Client extends Application implements OnMessageSended {
                 Gson gson = new Gson();
                 if(msg.startsWith("{")){
                     Generic generic = gson.fromJson(msg,Generic.class);
-                            Letter letter = gson.fromJson(msg,Letter.class);
-                            Platform.runLater(()->{
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/GameWindow.fxml"));
-                                try {
-                                    loader.setController(gameController);
-                                    Parent p = loader.load();
-                                    Scene scene = new Scene(p);
-                                    stage.setScene(scene);
-                                    gameController.setTitle(letter.getLetter());
-                                    stage.show();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                new Thread(()->{
-                                    readMessage(stage);
-                                }).start();
-                            });
+                            switch(generic.type){
+                                case "Letter":
+                                    Letter letter = gson.fromJson(msg,Letter.class);
+                                    Platform.runLater(()->{
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/GameWindow.fxml"));
+                                        try {
+                                            loader.setController(gameController);
+                                            Parent p = loader.load();
+                                            Scene scene = new Scene(p);
+                                            stage.setScene(scene);
+                                            gameController.setTitle(letter.getLetter());
+                                            stage.show();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        new Thread(()->{
+                                            readMessage(stage);
+                                        }).start();
+                                    });
+                                    break;
+                                case "Message":
+                                    gameController.getOwnAnswers();
+                                    Platform.runLater(()->{
+                                        new Thread(()->{
+                                            readMessage(stage);
+                                        }).start();
+                                    });
+                                    break;
+                            }
 
                 }else if(msg.startsWith("[")){
                     Result[] result = gson.fromJson(msg, Result[].class);
