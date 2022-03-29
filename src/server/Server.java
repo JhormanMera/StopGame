@@ -7,11 +7,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Server {
+public class Server{
     private ArrayList<Session> sessions;
     private StopGame stopGame;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         new Server();
     }
 

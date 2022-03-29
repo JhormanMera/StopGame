@@ -49,6 +49,9 @@ public class Match {
         strings=calculatePoints(answers1.getObject().toUpperCase(),answers2.getObject().toUpperCase());
         answers1.setObjectPoints(strings[0]);
         answers2.setObjectPoints(strings[1]);
+        //Total
+        answers1.setTotalPoints();
+        answers2.setTotalPoints();
 
     }
     private String[] calculatePoints(String ans1, String ans2){

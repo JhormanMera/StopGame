@@ -28,11 +28,6 @@ public class StopGame {
         match.sendLetter();
     }
 
-    /*
-    public void eraseMatch(Match match){
-        matches.remove(match);
-    }
-
     public void eraseMatch(Session player){
         boolean flag=true;
         for (int i = 0; i < matches.size()-1 && flag; i++) {
@@ -42,5 +37,4 @@ public class StopGame {
             }
         }
     }
-*/
 }

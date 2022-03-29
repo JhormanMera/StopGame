@@ -55,5 +55,7 @@ public class Result {
 
     public String getTotalPoints() {return totalPoints; }
 
-    public void setTotalPoints(String totalPoints) {this.totalPoints = totalPoints;}
+    public void setTotalPoints() {
+        totalPoints=String.valueOf(Integer.parseInt(namePoints)+Integer.parseInt(animalPoints)+Integer.parseInt(placePoints)+Integer.parseInt(objectPoints));
+    }
 }

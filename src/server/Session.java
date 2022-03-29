@@ -6,7 +6,7 @@ import events.OnMessageSended;
 import java.io.*;
 import java.net.Socket;
 
-public class Session extends Thread implements OnMessageSended, OnMessageReceived {
+public class Session extends Thread implements OnMessageSended, OnMessageReceived{
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;

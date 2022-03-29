@@ -116,7 +116,6 @@ public class Client extends Application implements OnMessageSended {
                             }
 
                 }else if(msg.startsWith("[")){
-                    System.out.println("Entró al verificador de arreglo "+ msg);
                     Result[] result = gson.fromJson(msg, Result[].class);
                     List<Result> alfa = Arrays.asList(result);
                     Platform.runLater(()->{
@@ -133,7 +132,6 @@ public class Client extends Application implements OnMessageSended {
                             e.printStackTrace();
                         }
                     });
-
                 }
             }).start();
     }
