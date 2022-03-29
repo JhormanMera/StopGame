@@ -72,11 +72,6 @@ public class ResultsWindowController{
 
     }
 
-    @FXML
-    void playAgainBtn(ActionEvent event) {
-
-    }
-
     public void setOwnResults(String name, String animal, String place, String object) {
         ownNameResult.setText(name);
         ownAnimalResult.setText(animal);

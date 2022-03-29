@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Match {
+    private final static int REPEATED_ANSWER=50;
+    private final static int NON_REPEATED_ANSWER=100;
+    private final static int NON_ANSWERED=0;
     private Session Player1;
     private Session Player2;
     private boolean playAgain;
@@ -28,20 +31,21 @@ public class Match {
         Player2=p2; sender2=p2;receiver2=p2;
         playAgain=false;
     }
+/*
+    public String calculatePoints(String answers){
+        System.out.println(answers);
+        if(){
 
-    public String calculatePoints(String results1, String results2){
-        String points="";
-
+        }
         return points;
     }
-
+*/
     public void sendLetter(){
         Random random = new Random();
         String matchLetter = String.valueOf((char) (random.nextInt(26) + 'A'));
         Letter letter = new Letter(matchLetter);
         Gson gson = new Gson();
         String line = gson.toJson(letter);
-        System.out.println("Letra: "+line);
         sender1.onMessageSended(line);
         sender2.onMessageSended(line);
         readMessage();
@@ -63,12 +67,14 @@ public class Match {
                     answers.add(a);
                     answers.add(b);
                     String send = gson.toJson(answers);
+                    System.out.println(send+" Enviado al P1");
                     sender1.onMessageSended(send);
                     answers.clear();
                     answers.add(b);
                     answers.add(a);
+                    send = gson.toJson(answers);
+                    System.out.println(send+" Enviado al P1");
                     sender2.onMessageSended(send);
-
                 }
             }
         };

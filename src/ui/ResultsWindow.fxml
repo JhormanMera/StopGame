@@ -38,15 +38,10 @@
     <Label fx:id="opponentLocationResult" layoutX="577.0" layoutY="336.0" prefHeight="17.0" prefWidth="113.0" text="Texto (50)" />
     <Label fx:id="ownObjectResult" layoutX="332.0" layoutY="375.0" prefHeight="17.0" prefWidth="119.0" text="Texto (100)" />
     <Label fx:id="opponentObjectResult" layoutX="577.0" layoutY="377.0" prefHeight="17.0" prefWidth="113.0" text="Texto (50)" />
-    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="580.0" layoutY="517.0" mnemonicParsing="false" onAction="#finishBtn" prefHeight="51.0" prefWidth="343.0" text="Finish" AnchorPane.bottomAnchor="32.0">
+    <Button alignment="CENTER" contentDisplay="CENTER" layoutX="343.0" layoutY="513.0" mnemonicParsing="false" onAction="#finishBtn" prefHeight="51.0" prefWidth="343.0" text="Finish" AnchorPane.bottomAnchor="36.0">
          <font>
             <Font name="System Bold" size="24.0" />
          </font></Button>
-      <Button alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="517.0" mnemonicParsing="false" onAction="#playAgainBtn" prefHeight="51.0" prefWidth="343.0" text="Play Again">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Button>
       <Label layoutX="208.0" layoutY="415.0" text="TOTAL POINTS" />
       <Separator layoutX="182.0" layoutY="391.0" prefHeight="17.0" prefWidth="623.0" />
       <Separator layoutX="182.0" layoutY="432.0" prefHeight="9.0" prefWidth="617.0" />

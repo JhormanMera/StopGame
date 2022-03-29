@@ -79,7 +79,6 @@ public class Client extends Application implements OnMessageSended {
                     while(msg.isEmpty()){
                         msg = reader.readLine();
                     }
-                    System.out.println("Mensaje: "+msg);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -106,7 +105,7 @@ public class Client extends Application implements OnMessageSended {
                                         }).start();
                                     });
                                     break;
-                                case "Message":
+                                case "Msg":
                                     gameController.getOwnAnswers();
                                     Platform.runLater(()->{
                                         new Thread(()->{
@@ -117,6 +116,7 @@ public class Client extends Application implements OnMessageSended {
                             }
 
                 }else if(msg.startsWith("[")){
+                    System.out.println("Entró al verificador de arreglo "+ msg);
                     Result[] result = gson.fromJson(msg, Result[].class);
                     List<Result> alfa = Arrays.asList(result);
                     Platform.runLater(()->{

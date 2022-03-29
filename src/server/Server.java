@@ -23,13 +23,10 @@ public class Server {
             System.out.println("Esperando cliente...");
             Socket socket = server.accept();
             System.out.println("Nuevo cliente conectado!");
-            System.out.println("Entró en el puerto: " + socket.getPort());
             Session session = new Session(socket);
             session.start();
             sessions.add(session);
-            System.out.println("size: "+sessions.size());
             if(sessions.size()%2==0){
-                System.out.println("Entra IF");
                 stopGame.addMatch(sessions.get(sessions.size()-1),sessions.get(sessions.size()-2));
             }
         }

@@ -41,6 +41,18 @@ public class GameWindowController{
     }
 
     public void getOwnAnswers(){
+        if(nameAnswer.getText().trim().isEmpty()){
+            nameAnswer.setText("NONE");
+        }
+        if(animalAnswer.getText().trim().isEmpty()){
+            animalAnswer.setText("NONE");
+        }
+        if(locationAnswer.getText().trim().isEmpty()){
+            locationAnswer.setText("NONE");
+        }
+        if(objectAnswer.getText().trim().isEmpty()){
+            objectAnswer.setText("NONE");
+        }
         String msg= nameAnswer.getText().trim()+"//"+animalAnswer.getText().trim()+"//"+locationAnswer.getText().trim()+"//"+objectAnswer.getText().trim();
         sended.onMessageSended(msg);
     }
@@ -60,7 +72,8 @@ public class GameWindowController{
             alert.setContentText("All fields must be filled before attempting to stop the game");
             alert.showAndWait();
         }else{
-            getOwnAnswers();
+            String msg= nameAnswer.getText().trim()+"//"+animalAnswer.getText().trim()+"//"+locationAnswer.getText().trim()+"//"+objectAnswer.getText().trim();
+            sended.onMessageSended(msg);
         }
 
     }
