@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Collection;
+
 public class Result {
     public String type="Result";
     private String name;

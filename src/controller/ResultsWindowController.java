@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,7 +70,7 @@ public class ResultsWindowController{
 
     @FXML
     void finishBtn(ActionEvent event) {
-
+        Platform.exit();
     }
 
     public void setOwnResults(String name, String animal, String place, String object) {

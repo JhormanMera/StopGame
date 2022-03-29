@@ -5,16 +5,16 @@ import events.OnMessageReceived;
 import events.OnMessageSended;
 import model.Letter;
 import model.Message;
+import model.Result;
 import server.Session;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Match {
-    private final static int REPEATED_ANSWER=50;
-    private final static int NON_REPEATED_ANSWER=100;
-    private final static int NON_ANSWERED=0;
+    private final static String REPEATED_ANSWER="50";
+    private final static String NON_REPEATED_ANSWER="100";
+    private final static String NON_ANSWERED="0";
     private Session Player1;
     private Session Player2;
     private boolean playAgain;
@@ -31,15 +31,54 @@ public class Match {
         Player2=p2; sender2=p2;receiver2=p2;
         playAgain=false;
     }
-/*
-    public String calculatePoints(String answers){
-        System.out.println(answers);
-        if(){
 
-        }
-        return points;
+    public void calculatePoints(Result answers1, Result answers2){
+        //Nombre
+        String[] strings =calculatePoints(answers1.getName().toUpperCase(),answers2.getName().toUpperCase());
+        answers1.setNamePoints(strings[0]);
+        answers2.setNamePoints(strings[1]);
+        //Animal
+        strings= calculatePoints(answers1.getAnimal().toUpperCase(),answers2.getAnimal().toUpperCase());
+        answers1.setAnimalPoints(strings[0]);
+        answers2.setAnimalPoints(strings[1]);
+        //Lugar
+        strings = calculatePoints(answers1.getPlace().toUpperCase(),answers2.getPlace().toUpperCase());
+        answers1.setPlacePoints(strings[0]);
+        answers2.setPlacePoints(strings[1]);
+        //Objeto
+        strings=calculatePoints(answers1.getObject().toUpperCase(),answers2.getObject().toUpperCase());
+        answers1.setObjectPoints(strings[0]);
+        answers2.setObjectPoints(strings[1]);
+
     }
-*/
+    private String[] calculatePoints(String ans1, String ans2){
+        String[] strings = new String[2];
+        if(ans2.equalsIgnoreCase("NONE")&&ans1.equalsIgnoreCase("NONE")) {
+            strings[0] = NON_ANSWERED;
+            strings[1] = NON_ANSWERED;
+        }else if(ans1.equalsIgnoreCase("NONE")) {
+            strings[0] = NON_ANSWERED;
+            strings[1] = NON_REPEATED_ANSWER;
+        }else if(ans2.equalsIgnoreCase("NONE")){
+            strings[0]=NON_REPEATED_ANSWER;
+            strings[1]=NON_ANSWERED;
+        }else if(ans1.equalsIgnoreCase(ans2)){
+            strings[0]=REPEATED_ANSWER;
+            strings[1]=REPEATED_ANSWER;
+        }else{
+            strings[0]=NON_REPEATED_ANSWER;
+            strings[1]=NON_REPEATED_ANSWER;
+        }
+        return strings;
+    }
+    public void changeOrder(ArrayList<Result> ans){
+        Result r=ans.get(0);
+        Result ro=ans.get(1);
+        ans.clear();
+        ans.add(ro);
+        ans.add(r);
+    }
+
     public void sendLetter(){
         Random random = new Random();
         String matchLetter = String.valueOf((char) (random.nextInt(26) + 'A'));
@@ -51,58 +90,70 @@ public class Match {
         readMessage();
     }
     public void readMessage(){
+
         P1Thread = new Thread() {
+
             public void run() {
+
                 synchronized(this) {
+                    //Recibe las respuéstas del jugador que presionó stop
                     String a = receiver1.onMessageReceived();
                     if(a.contains("Result")) {
+                        //Detiene el hilo del otro jugador
                         P2Thread.interrupt();
                     }
-                    Message msg = new Message ("Answers");
+                    //Envía "Answers" como código para que se retornen las respuestas del otro jugador
+                    Message msg = new Message("Answers");
                     Gson gson = new Gson();
                     String line = gson.toJson(msg);
                     sender2.onMessageSended(line);
+                    //***
+                    //Guarda las respuestas del segundo jugador
                     String b = receiver2.onMessageReceived();
-                    ArrayList<String> answers = new ArrayList<>();
-                    answers.add(a);
-                    answers.add(b);
+                    //Deserializa el Json y calcula puntajes
+                    Result own = gson.fromJson(a,Result.class);
+                    Result opp = gson.fromJson(b,Result.class);
+                    ArrayList<Result> answers = new ArrayList<>();
+                    answers.add(own); answers.add(opp);
+                    calculatePoints(answers.get(0),answers.get(1));
                     String send = gson.toJson(answers);
-                    System.out.println(send+" Enviado al P1");
                     sender1.onMessageSended(send);
-                    answers.clear();
-                    answers.add(b);
-                    answers.add(a);
+                    changeOrder(answers);
                     send = gson.toJson(answers);
-                    System.out.println(send+" Enviado al P1");
                     sender2.onMessageSended(send);
                 }
             }
         };
-
 
         P2Thread = new Thread() {
 
             public void run() {
 
                 synchronized(this) {
-
+                    //Recibe las respuéstas del jugador que presionó stop
                     String a = receiver2.onMessageReceived();
                     if(a.contains("Result")) {
+                        //Detiene el hilo del otro jugador
                         P1Thread.interrupt();
                     }
+                    //Envía "Answers" como código para que se retornen las respuestas del otro jugador
                     Message msg = new Message("Answers");
                     Gson gson = new Gson();
                     String line = gson.toJson(msg);
                     sender1.onMessageSended(line);
+                    //***
+                    //Guarda las respuestas del segundo jugador
                     String b = receiver1.onMessageReceived();
-                    ArrayList<String> answers = new ArrayList<>();
-                    answers.add(a);
-                    answers.add(b);
+                    //Deserializa el Json y calcula puntajes
+                    Result own = gson.fromJson(a,Result.class);
+                    Result opp = gson.fromJson(b,Result.class);
+                    ArrayList<Result> answers = new ArrayList<>();
+                    answers.add(own); answers.add(opp);
+                    calculatePoints(answers.get(0),answers.get(1));
                     String send = gson.toJson(answers);
                     sender2.onMessageSended(send);
-                    answers.clear();
-                    answers.add(b);
-                    answers.add(a);
+                    changeOrder(answers);
+                    send = gson.toJson(answers);
                     sender1.onMessageSended(send);
                 }
             }
